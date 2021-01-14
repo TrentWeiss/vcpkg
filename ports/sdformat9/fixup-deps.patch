@@ -1,0 +1,62 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3e5264c3..d3f30c90 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -112,17 +112,8 @@ set (sdf_cmake_dir ${PROJECT_SOURCE_DIR}/cmake CACHE PATH
+ include (${sdf_cmake_dir}/SDFUtils.cmake)
+ 
+ message (STATUS "\n\n====== Finding 3rd Party Packages ======")
+- # Use of tinyxml. System installation on UNIX. Internal copy on WIN
+-if (UNIX)
+-  message (STATUS "Using system tinyxml")
+-  set (USE_EXTERNAL_TINYXML True)
+-elseif(WIN32)
+-  message (STATUS "Using internal tinyxml code")
+-  set (USE_EXTERNAL_TINYXML False)
+-else()
+-  message (STATUS "Unknown platform")
+-  BUILD_ERROR("Unknown platform")
+-endif()
++# This is vcpkg, we have tinyxml on both UNIX and WIN
++set (USE_EXTERNAL_TINYXML True)
+ include (${sdf_cmake_dir}/SearchForStuff.cmake)
+ message (STATUS "----------------------------------------\n")
+ 
+diff --git a/cmake/SearchForStuff.cmake b/cmake/SearchForStuff.cmake
+index 427e5e7a..4317958b 100644
+--- a/cmake/SearchForStuff.cmake
++++ b/cmake/SearchForStuff.cmake
+@@ -52,29 +52,10 @@ if (NOT PKG_CONFIG_FOUND)
+   endif()
+ endif()
+ 
+-if (NOT DEFINED USE_INTERNAL_URDF OR NOT USE_INTERNAL_URDF)
+-  # check for urdfdom with pkg-config
+-  pkg_check_modules(URDF urdfdom>=1.0)
+-
+-  if (NOT URDF_FOUND)
+-    find_package(urdfdom)
+-    if (urdfdom_FOUND)
+-      set(URDF_INCLUDE_DIRS ${urdfdom_INCLUDE_DIRS})
+-      # ${urdfdom_LIBRARIES} already contains absolute library filenames
+-      set(URDF_LIBRARY_DIRS "")
+-      set(URDF_LIBRARIES ${urdfdom_LIBRARIES})
+-    elseif (NOT DEFINED USE_INTERNAL_URDF)
+-      message(STATUS "Couldn't find urdfdom >= 1.0, using internal copy")
+-      set(USE_INTERNAL_URDF true)
+-    else()
+-      BUILD_ERROR("Couldn't find the urdfdom >= 1.0 system installation")
+-    endif()
+-  else()
+-    # what am I doing here? pkg-config and cmake
+-    set(URDF_INCLUDE_DIRS ${URDF_INCLUDEDIR})
+-    set(URDF_LIBRARY_DIRS ${URDF_LIBDIR})
+-  endif()
+-endif()
++#This is vcpkg, we always have urdfdom built as a dependency.
++find_package(urdfdom CONFIG REQUIRED)
++set(URDF_LIBRARIES ${urdfdom_LIBRARIES})
++set(URDF_INCLUDE_DIRS ${urdfdom_INCLUDE_DIRS})
+ 
+ #################################################
+ # Find ign command line utility:
