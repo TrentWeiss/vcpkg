@@ -1,0 +1,65 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1000d2d..f876798 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -32,8 +32,8 @@ endif (MSVC OR MSVC90 OR MSVC10)
+ 
+ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+ 
+-find_package(tinyxml_vendor REQUIRED)
+-find_package(TinyXML REQUIRED)
++find_package(TinyXML CONFIG REQUIRED)
++set(TinyXML_LIBRARIES unofficial-tinyxml::unofficial-tinyxml)
+ 
+ find_package(urdfdom_headers 1.0 REQUIRED)
+ 
+@@ -45,8 +45,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+   add_compile_options(-Wall -Wextra -Wpedantic)
+ endif()
+ 
+-find_package(console_bridge_vendor REQUIRED) # Provides console_bridge 0.4.0 on platforms without it.
+-find_package(console_bridge REQUIRED)
++find_package(console_bridge CONFIG REQUIRED)
+ 
+ #In Visual Studio a special postfix for 
+ #libraries compiled in debug is used
+diff --git a/urdf_parser/CMakeLists.txt b/urdf_parser/CMakeLists.txt
+index d0ffb0f..1bc80f5 100644
+--- a/urdf_parser/CMakeLists.txt
++++ b/urdf_parser/CMakeLists.txt
+@@ -35,6 +35,7 @@ target_include_directories(urdfdom_world PUBLIC
+ target_link_libraries(urdfdom_world PUBLIC
+   console_bridge::console_bridge
+   urdfdom_headers::urdfdom_headers
++PRIVATE
+   ${TinyXML_LIBRARIES})
+ set_target_properties(urdfdom_world PROPERTIES SOVERSION ${URDF_MAJOR_MINOR_VERSION})
+ 
+@@ -51,6 +52,7 @@ target_include_directories(urdfdom_model PUBLIC
+ target_link_libraries(urdfdom_model PUBLIC
+   console_bridge::console_bridge
+   urdfdom_headers::urdfdom_headers
++PRIVATE
+   ${TinyXML_LIBRARIES})
+ set_target_properties(urdfdom_model PROPERTIES SOVERSION ${URDF_MAJOR_MINOR_VERSION})
+ 
+@@ -64,6 +66,7 @@ target_link_libraries(urdfdom_sensor PUBLIC
+   urdfdom_model
+   console_bridge::console_bridge
+   urdfdom_headers::urdfdom_headers
++PRIVATE
+   ${TinyXML_LIBRARIES})
+ set_target_properties(urdfdom_sensor PROPERTIES SOVERSION ${URDF_MAJOR_MINOR_VERSION})
+ 
+@@ -75,9 +78,10 @@ target_include_directories(urdfdom_model_state SYSTEM PUBLIC
+ target_include_directories(urdfdom_model_state PUBLIC
+   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+   "$<INSTALL_INTERFACE:include>")
+-target_link_libraries(urdfdom_model_state
++target_link_libraries(urdfdom_model_state PUBLIC
+   console_bridge::console_bridge
+   urdfdom_headers::urdfdom_headers
++PRIVATE
+   ${TinyXML_LIBRARIES})
+ set_target_properties(urdfdom_model_state PROPERTIES SOVERSION ${URDF_MAJOR_MINOR_VERSION})
+ 
