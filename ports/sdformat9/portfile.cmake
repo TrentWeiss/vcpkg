@@ -3,12 +3,11 @@ vcpkg_fail_port_install(ON_TARGET "linux" "uwp")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO osrf/sdformat
-    REF sdformat9_9.3.0
-    SHA512 6aff60ff5f71748b51a1252fcdcc393cb12a1aa677ba07048b558f41f94dfabb20dd939204e0e753637b8801587f6ce703be833ddc4116b7a182431bdee9ac34
+    REF sdformat9_9.4.0
+    SHA512 b7ed458a5a9ba5b5dcf457d3e0c9de0bca3d514a6870aa977a00a84f8a3b8d1bd21f3b437c0651af7f0cc9b9c6c8b905c968525194605b334ab62280b9d55b0e 
     HEAD_REF sdf9
     PATCHES
-      fixup-deps.patch
-      
+        fix-dependency-urdfdom.patch
 )
 
 # Ruby is required by the sdformat build process
