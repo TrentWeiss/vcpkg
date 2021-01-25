@@ -1,0 +1,13 @@
+diff --git a/cmake/urdfdom-config.cmake.in b/cmake/urdfdom-config.cmake.in
+index 3a0916d..dfd828c 100644
+--- a/cmake/urdfdom-config.cmake.in
++++ b/cmake/urdfdom-config.cmake.in
+@@ -3,7 +3,7 @@ if (@PKG_NAME@_CONFIG_INCLUDED)
+ endif()
+ set(@PKG_NAME@_CONFIG_INCLUDED TRUE)
+ 
+-set(@PKG_NAME@_INCLUDE_DIRS "${@PROJECT_NAME@_DIR}/@RELATIVE_PATH_CMAKE_DIR_TO_PREFIX@/include" "@TinyXML_INCLUDE_DIRS@")
++file( REAL_PATH ${CMAKE_CURRENT_LIST_DIR}/../../include @PKG_NAME@_INCLUDE_DIRS )
+ 
+ foreach(lib @PKG_LIBRARIES@)
+   set(onelib "${lib}-NOTFOUND")

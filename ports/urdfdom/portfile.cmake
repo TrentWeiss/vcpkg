@@ -8,6 +8,7 @@ vcpkg_from_github(
   HEAD_REF ros2
   PATCHES
     fix-deps.patch
+    fix-targets.patch
 )
 
 vcpkg_configure_cmake(
